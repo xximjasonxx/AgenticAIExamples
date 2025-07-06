@@ -8,10 +8,8 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
     public enum PlayMode
     {
         Aggressive,
-        Reckless,
         Normal,
         Cautious,
-        Conservative,
         Passive
     }
 }

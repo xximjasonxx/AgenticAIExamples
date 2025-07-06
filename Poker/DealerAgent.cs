@@ -26,7 +26,9 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
                 4) Announce the winner at the end of the game.
                 5) Keep track of the game state and ensure the rules are followed.
 
-                Once the game is over, terminate the orchestration.
+                All bets should be in increments of $100 dollars. The big blind is $200 and the small blind is $100.
+
+                IMPORTANT: When the game ends, you MUST announce "Game over" and declare the winner. This is critical for proper game termination.
                 You will interact with the players by sending messages and receiving their responses.
                 """,
             };

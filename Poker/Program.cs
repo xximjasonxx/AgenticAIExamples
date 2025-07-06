@@ -39,7 +39,7 @@ builder.AddAzureOpenAIChatClient(
 );
 
 var kernel = builder.Build();
-var gameplay = new Gameplay
+var gameplay = new Game
 {
     DealerAgent = new DealerAgent(kernel).Agent
 };
@@ -50,6 +50,20 @@ for (int index = 1; index <= numberOfPlayers; index++)
     gameplay.PlayerAgents.Add(new PlayerAgent(kernel, index, PlayMode.Normal).Agent);
 };
 
-await gameplay.PlayAsync(TimeSpan.FromMinutes(5));
+try
+{
+    await gameplay.PlayAsync(TimeSpan.FromMinutes(5));
+}
+catch (AggregateException aex)
+{
+    foreach (var inner in aex.InnerExceptions)
+    {
+        Console.WriteLine($"An aggregated error occurred: {inner.Message}");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred: {ex.Message}");
+}
 Console.WriteLine("\nPress any key to exit...");
 Console.ReadKey(true);
