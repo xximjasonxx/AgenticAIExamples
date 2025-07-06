@@ -1,18 +1,40 @@
 ﻿
 using Farrellsoft.Examples.SemanticKernel.Poker;
+using Microsoft.SemanticKernel;
+using Microsoft.Extensions.Configuration;
+
+// Set up configuration
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>()
+    .Build();
+
+var apiKey = configuration["AZURE_OPENAI_API_KEY"] 
+    ?? throw new InvalidOperationException("AZURE_OPENAI_API_KEY configuration value is required");
+
+var endpoint = configuration["AZURE_OPENAI_ENDPOINT"] 
+    ?? "https://openai-client-sandbox-eus2-mx01.openai.azure.com";
+
+var dealerDeploymentName = configuration["DEALER_DEPLOYMENT_NAME"] 
+    ?? "gpt-4o-mini-deployment";
+
+var playerDeploymentName = configuration["PLAYER_DEPLOYMENT_NAME"] 
+    ?? "o4-mini-deployment";
 
 var builder = Kernel.CreateBuilder();
 builder.AddAzureOpenAIChatCompletion(
-    deploymentName: "gpt-4o-mini-deployment",
-    endpoint: "https://openai-client-sandbox-eus2-mx01.openai.azure.com",
-    apiKey: builder.Configuration["AZURE_OPENAI_API_KEY"],
+    deploymentName: dealerDeploymentName,
+    endpoint: endpoint,
+    apiKey: apiKey,
     serviceId: "dealer"
 );
 
 builder.AddAzureOpenAIChatClient(
-    deploymentName: "o4-mini-deployment",
-    endpoint: "https://openai-client-sandbox-eus2-mx01.openai.azure.com",
-    apiKey: builder.Configuration["AZURE_OPENAI_API_KEY"],
+    deploymentName: playerDeploymentName,
+    endpoint: endpoint,
+    apiKey: apiKey,
     serviceId: "player"
 );
 
