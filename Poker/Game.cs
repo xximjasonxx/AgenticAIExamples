@@ -20,17 +20,7 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
         public async Task PlayAsync(TimeSpan timeLength)
         {
             // Create agent list with dealer interleaved after each player
-            var allAgents = new List<ChatCompletionAgent>();
-            
-            // Start with dealer to set up the game
-            allAgents.Add(DealerAgent);
-            
-            // Add each player followed by dealer for evaluation
-            foreach (var player in PlayerAgents)
-            {
-                allAgents.Add(player);
-                allAgents.Add(DealerAgent); // Dealer evaluates after each player
-            }
+            var allAgents = SetupPlayers();
 
             using var cancellationTokenSource = new CancellationTokenSource(timeLength);
 
@@ -87,6 +77,45 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
 
             await runtime.StopAsync();
             _chatHistory.Clear();
+    }
+
+        private List<ChatCompletionAgent> SetupPlayers()
+        {
+            var allAgents = new List<ChatCompletionAgent>();
+
+            // Start with dealer for game setup and blind handling
+            allAgents.Add(DealerAgent);
+
+            // error: if less than two players, throw exception
+            if (PlayerAgents.Count < 2)
+            {
+                throw new InvalidOperationException("At least two player agents are required to play poker.");
+            }
+
+            // handle for only two players
+            if (PlayerAgents.Count == 2)
+            {
+                allAgents.AddRange(PlayerAgents);
+            }
+            else
+            {
+                // For more than two players, start at index 2 and wrap around
+                // Loop from player 3 through n, then players 0 and 1
+                for (int i = 2; i < PlayerAgents.Count; i++)
+                {
+                    allAgents.Add(PlayerAgents[i]);
+                    allAgents.Add(DealerAgent);
+                }
+
+                // Add player 0 (small blind)
+                allAgents.Add(PlayerAgents[0]);
+                allAgents.Add(DealerAgent);
+
+                // Add player 1 (big blind) - last to act
+                allAgents.Add(PlayerAgents[1]);
+            }
+            
+            return allAgents;
         }
     }
 }

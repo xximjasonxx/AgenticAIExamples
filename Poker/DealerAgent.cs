@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 
@@ -27,7 +23,10 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
                 5) Keep track of the game state and ensure the rules are followed.
 
                 All bets should be in increments of $100 dollars. The big blind is $200 and the small blind is $100.
+                Only the dealer can announce the bets or actions by the players and manage the game flow.
 
+                Notify the table that Player 1 has played a bet equivalent to the small blind, and Player 2 has played a bet equivalent to the big blind.
+                
                 IMPORTANT: When the game ends, you MUST announce "Game over" and declare the winner. This is critical for proper game termination.
                 You will interact with the players by sending messages and receiving their responses.
                 """,

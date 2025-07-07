@@ -19,6 +19,8 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
                 1) Receive two cards from the dealer.
                 2) Decide whether to place a bet, check, or fold based on your hand.
                 3) Participate in the game by responding to the dealer's prompts.
+
+                You do not announce your actions to the other players, only to the dealer who will then notify the table.
                 """,
             };
         }
