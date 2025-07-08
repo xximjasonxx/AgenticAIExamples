@@ -2,6 +2,7 @@
 using Farrellsoft.Examples.SemanticKernel.Poker;
 using Microsoft.SemanticKernel;
 using Microsoft.Extensions.Configuration;
+using OpenAI;
 
 // Set up configuration
 var configuration = new ConfigurationBuilder()
@@ -13,26 +14,19 @@ var configuration = new ConfigurationBuilder()
 
 var apiKey = configuration["AZURE_OPENAI_API_KEY"] 
     ?? throw new InvalidOperationException("AZURE_OPENAI_API_KEY configuration value is required");
-
-var endpoint = configuration["AZURE_OPENAI_ENDPOINT"] 
-    ?? "https://openai-client-sandbox-eus2-mx01.openai.azure.com";
-
-var dealerDeploymentName = configuration["DEALER_DEPLOYMENT_NAME"] 
-    ?? "gpt-4o-mini-deployment";
-
-var playerDeploymentName = configuration["PLAYER_DEPLOYMENT_NAME"] 
-    ?? "o4-mini-deployment";
+var endpoint = "https://openai-client-sandbox-eus2-mx01.openai.azure.com";
 
 var builder = Kernel.CreateBuilder();
+
 builder.AddAzureOpenAIChatCompletion(
-    deploymentName: dealerDeploymentName,
+    deploymentName: "gpt-4o-mini-deployment",
     endpoint: endpoint,
     apiKey: apiKey,
     serviceId: "dealer"
 );
 
 builder.AddAzureOpenAIChatClient(
-    deploymentName: playerDeploymentName,
+    deploymentName: "o4-mini-deployment",
     endpoint: endpoint,
     apiKey: apiKey,
     serviceId: "player"

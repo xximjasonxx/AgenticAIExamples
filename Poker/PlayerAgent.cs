@@ -1,5 +1,6 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace Farrellsoft.Examples.SemanticKernel.Poker
 {
@@ -22,6 +23,10 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
 
                 You do not announce your actions to the other players, only to the dealer who will then notify the table.
                 """,
+                Arguments = new KernelArguments(new OpenAIPromptExecutionSettings()
+                {
+                    ServiceId = "player"
+                })
             };
         }
     }

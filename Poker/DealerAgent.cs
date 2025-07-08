@@ -1,5 +1,6 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace Farrellsoft.Examples.SemanticKernel.Poker
 {
@@ -15,7 +16,7 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
                 Name = "Dealer",
                 Description = "The dealer in a poker game. You deal cards to the players and facilitate the game.",
                 Instructions = """
-                You are the dealer in a poker game. Your role is to:
+                You are the dealer in a poker game. Perform the following tasks:
                 1) Deal two cards to each player, one at a time. Identify the cards dealt to each player.
                 2) Announce the start of the game and ask for players to place their bets, check, or fold
                 3) Deal the community cards in the correct order (flop, turn, river)
@@ -30,6 +31,11 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
                 IMPORTANT: When the game ends, you MUST announce "Game over" and declare the winner. This is critical for proper game termination.
                 You will interact with the players by sending messages and receiving their responses.
                 """,
+                Arguments = new KernelArguments(new OpenAIPromptExecutionSettings()
+                {
+                    Temperature = 0.2f,
+                    ServiceId = "dealer"
+                })
             };
         }
     }
