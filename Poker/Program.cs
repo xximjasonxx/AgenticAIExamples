@@ -46,7 +46,7 @@ for (int index = 1; index <= numberOfPlayers; index++)
 
 try
 {
-    await gameplay.PlayAsync(TimeSpan.FromMinutes(5));
+    await gameplay.PlayAsync(kernel, TimeSpan.FromMinutes(10));
 }
 catch (AggregateException aex)
 {

@@ -19,17 +19,17 @@ namespace Farrellsoft.Examples.SemanticKernel.Poker
                 You are the dealer in a poker game. Perform the following tasks:
                 1) Deal two cards to each player, one at a time. Identify the cards dealt to each player.
                 2) Announce the start of the game and ask for players to place their bets, check, or fold
+                    - In Pre-flop betting:
+                        - The first player to act is the player to the left of the big blind.
+                        - The small blind acts first, followed by the big blind.
+                        - The big blind is the last to bet in pre-flop betting.
+                    - In post-flop betting:
+                        - The first player to act is the player to the left of the dealer.
                 3) Deal the community cards in the correct order (flop, turn, river)
                 4) Announce the winner at the end of the game.
-                5) Keep track of the game state and ensure the rules are followed.
 
-                All bets should be in increments of $100 dollars. The big blind is $200 and the small blind is $100.
-                Only the dealer can announce the bets or actions by the players and manage the game flow.
-
-                Notify the table that Player 1 has played a bet equivalent to the small blind, and Player 2 has played a bet equivalent to the big blind.
-                
-                IMPORTANT: When the game ends, you MUST announce "Game over" and declare the winner. This is critical for proper game termination.
-                You will interact with the players by sending messages and receiving their responses.
+                Ensure all bets are in increments of $100 dollars. The big blind is $200 and the small blind is $100.
+                The total amount given to each player is $1000.
                 """,
                 Arguments = new KernelArguments(new OpenAIPromptExecutionSettings()
                 {
