@@ -1,27 +1,22 @@
 import azure.functions as func
 import datetime
-import json
 import logging
+
+from models import PriceHistoryRequest
+from decorators import json_body
 
 app = func.FunctionApp()
 
-@app.route(route="get_price_history", auth_level=func.AuthLevel.FUNCTION)
-def get_price_history(req: func.HttpRequest) -> func.HttpResponse:
+@app.route(route="get_price_history", auth_level=func.AuthLevel.FUNCTION, methods=["POST"])
+@json_body(PriceHistoryRequest)
+def get_price_history(request: PriceHistoryRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-    else:
+    
+    # Validate that ticketName is provided and not empty
+    if not request.ticketName:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
+            "ticketName is required and cannot be empty.",
+            status_code=400
         )
+        
+    return func.HttpResponse(f"Processing price history for ticket: {request.ticketName}")
