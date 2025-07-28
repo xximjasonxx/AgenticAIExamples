@@ -1,2 +1,7 @@
 bin/
 obj/
+
+**/.venv/
+**/__pycahce__/
+Stocks/function_app/__pycache__
+Stocks/function_app/local.settings.json
