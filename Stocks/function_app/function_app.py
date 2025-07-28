@@ -1,9 +1,8 @@
 import azure.functions as func
 import datetime
 import logging
-import json
 
-from models import PriceHistoryRequest
+from request_parser import parse_request_body
 
 app = func.FunctionApp()
 
@@ -11,34 +10,16 @@ app = func.FunctionApp()
 def get_price_history(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     
-    try:
-        # Get JSON body from request
-        req_body = req.get_json()
-        if not req_body:
-            return func.HttpResponse(
-                "Request body is required. Expected JSON with 'ticketName' field.",
-                status_code=400
-            )
-        
-        # Create model instance from JSON
-        request_data = PriceHistoryRequest(**req_body)
-        
-        # Validate that ticketName is provided and not empty
-        if not request_data.ticketName:
-            return func.HttpResponse(
-                "ticketName is required and cannot be empty.",
-                status_code=400
-            )
-            
-        return func.HttpResponse(f"Processing price history for ticket: {request_data.ticketName}")
-        
-    except TypeError as e:
+    # Parse and deserialize request body
+    request_data, error = parse_request_body(req)
+    if error:
+        return func.HttpResponse(error, status_code=400)
+    
+    # Validate that tickerName is provided and not empty
+    if not request_data.tickerName:
         return func.HttpResponse(
-            f"Invalid request body structure: {str(e)}",
+            "tickerName is required and cannot be empty.",
             status_code=400
         )
-    except (ValueError, json.JSONDecodeError) as e:
-        return func.HttpResponse(
-            "Invalid JSON in request body.",
-            status_code=400
-        )
+
+    return func.HttpResponse(f"Processing price history for ticker: {request_data.tickerName}")
