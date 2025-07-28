@@ -18,13 +18,26 @@ def get_price_history(req: func.HttpRequest) -> func.HttpResponse:
     
     Expected request body:
     {
-        "tickerName": "AAPL",
-        "period": "1y"  // optional, defaults to "1y"
+        "tickerName": "AAPL"
     }
     """
     logging.info('Python HTTP trigger function processed a request for stock price history.')
     
     # Parse and deserialize request body
     request_data = parse_request_body(req)
+    if not request_data or request_data.tickerName.strip() == "":
+        return func.HttpResponse(
+            "Invalid request body. Expected JSON with 'tickerName'.",
+            status_code=400
+        )
+    
+    # figure out the range minus 1 month
 
-    return func.HttpResponse(None, status_code=200)
+    stock_service = StockService()
+
+    
+    user_id = req.headers.get('X-User-ID')
+    timezone = req.headers.get('X-Timezone')
+    local_time = req.headers.get('X-Local-Time')
+
+    return func.HttpResponse(f"User ID: {user_id}, Timezone: {timezone}, Local Time: {local_time}")

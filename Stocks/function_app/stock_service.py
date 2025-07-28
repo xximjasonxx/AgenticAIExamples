@@ -1,10 +1,11 @@
 from datetime import datetime
 from models import StockPriceData
 from typing import  List
+import os
 
 class StockService:
-  def __init__(self, api_key: str):
-    self.api_key = api_key
+  def __init__(self):
+    pass
 
   def get_stock_history(self, ticker: str, period_start: datetime, period_end: datetime) -> List[StockPriceData]:
     """
