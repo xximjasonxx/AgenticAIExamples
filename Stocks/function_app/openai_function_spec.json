@@ -1,0 +1,183 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Stock Price History API",
+    "description": "Azure Function API for retrieving historical stock price data",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://func-stockhelper-eus2-mx01.azurewebsites.net/api",
+      "description": "Azure Functions endpoint"
+    }
+  ],
+  "paths": {
+    "/get_price_history": {
+      "post": {
+        "summary": "Get stock price history",
+        "description": "Retrieves historical stock price data for a given ticker symbol",
+        "operationId": "getStockPriceHistory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PriceHistoryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceHistoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid ticker symbol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PriceHistoryRequest": {
+        "type": "object",
+        "required": ["tickerName"],
+        "properties": {
+          "tickerName": {
+            "type": "string",
+            "description": "The stock ticker symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')",
+            "pattern": "^[A-Z]{1,5}$",
+            "example": "AAPL"
+          }
+        }
+      },
+      "PriceHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "ticker": {
+            "type": "string",
+            "description": "The requested ticker symbol",
+            "example": "AAPL"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StockPriceData"
+            }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/ResponseMetadata"
+          }
+        }
+      },
+      "StockPriceData": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Trading date",
+            "example": "2024-01-02"
+          },
+          "open": {
+            "type": "number",
+            "format": "float",
+            "description": "Opening price",
+            "example": 187.15
+          },
+          "high": {
+            "type": "number",
+            "format": "float",
+            "description": "Highest price of the day",
+            "example": 188.44
+          },
+          "low": {
+            "type": "number",
+            "format": "float",
+            "description": "Lowest price of the day",
+            "example": 183.89
+          },
+          "close": {
+            "type": "number",
+            "format": "float",
+            "description": "Closing price",
+            "example": 185.64
+          },
+          "volume": {
+            "type": "integer",
+            "description": "Trading volume",
+            "example": 82488200
+          },
+          "adjusted_close": {
+            "type": "number",
+            "format": "float",
+            "description": "Adjusted closing price",
+            "example": 185.64
+          }
+        }
+      },
+      "ResponseMetadata": {
+        "type": "object",
+        "properties": {
+          "total_records": {
+            "type": "integer",
+            "description": "Total number of data points returned",
+            "example": 252
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Start date of the data range",
+            "example": "2024-01-02"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "End date of the data range",
+            "example": "2024-12-31"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Invalid request body. Expected JSON with 'tickerName'."
+          },
+          "code": {
+            "type": "integer",
+            "description": "Error code",
+            "example": 400
+          }
+        }
+      }
+    }
+  }
+}

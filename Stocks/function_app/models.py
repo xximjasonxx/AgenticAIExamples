@@ -4,7 +4,6 @@ from typing import Optional, List
 @dataclass
 class PriceHistoryRequest:
     tickerName: str
-    period: Optional[str] = "1y"  # Default to 1 year
 
 @dataclass
 class StockPriceData:

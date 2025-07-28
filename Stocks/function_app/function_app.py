@@ -7,10 +7,11 @@ from dataclasses import asdict
 
 from request_parser import parse_request_body
 from stock_service import StockService
+from date_service import DateService
 
 app = func.FunctionApp()
 
-@app.route(route="get_price_history", auth_level=func.AuthLevel.FUNCTION, methods=["POST"])
+@app.route(route="get_price_history", auth_level=func.AuthLevel.ANONYMOUS, methods=["POST"])
 def get_price_history(req: func.HttpRequest) -> func.HttpResponse:
     """
     Azure Function to get stock price history.
@@ -32,12 +33,14 @@ def get_price_history(req: func.HttpRequest) -> func.HttpResponse:
         )
     
     # figure out the range minus 1 month
-
+    start_date, end_date = DateService.get_period()
     stock_service = StockService()
+    price_data = stock_service.get_stock_history(
+        ticker=request_data.tickerName.strip(),
+        period_start=start_date,
+        period_end=end_date)
 
+    # Convert StockPriceData to list of dicts with date and price
+    result = [{"date": stock.date, "price": stock.close} for stock in price_data]
     
-    user_id = req.headers.get('X-User-ID')
-    timezone = req.headers.get('X-Timezone')
-    local_time = req.headers.get('X-Local-Time')
-
-    return func.HttpResponse(f"User ID: {user_id}, Timezone: {timezone}, Local Time: {local_time}")
+    return func.HttpResponse(json.dumps(result), mimetype="application/json")
