@@ -1,8 +1,6 @@
 import azure.functions as func
-import json
 
-from models import PriceHistoryRequest
-
+from shared.models import PriceHistoryRequest
 
 def parse_request_body(req: func.HttpRequest) -> PriceHistoryRequest:
     """
