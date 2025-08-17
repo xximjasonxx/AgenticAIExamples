@@ -2,7 +2,8 @@ from datetime import datetime
 from shared.models import StockPriceData
 from typing import List
 import os
-import requests
+import urllib.request
+import json
 
 class StockService:
   def __init__(self):
@@ -41,26 +42,28 @@ class StockService:
   
   def _fetch_stock_data(self, url: str) -> List[StockPriceData]:
     """
-    Helper method to fetch stock data from the API using requests.
+    Helper method to fetch stock data from the API using urllib.
     """
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        # Convert API response to StockPriceData objects
-        stock_data = []
-        for item in data:
-            # Map API response to StockPriceData model
-            stock_price = StockPriceData(
-                date=item.get('date'),
-                open=float(item.get('open', 0)),
-                high=float(item.get('high', 0)),
-                low=float(item.get('low', 0)),
-                close=float(item.get('close', 0)),
-                volume=int(item.get('volume', 0)),
-                adjusted_close=float(item.get('adjusted_close')) if item.get('adjusted_close') else None
-            )
-            stock_data.append(stock_price)
-        return stock_data
-    else:
-        print(f"API request failed with status {response.status_code}")
+    try:
+        with urllib.request.urlopen(url) as response:
+            if response.status == 200:
+                data = json.loads(response.read().decode())
+                stock_data = []
+                for item in data:
+                    stock_price = StockPriceData(
+                        date=item.get('date'),
+                        open=float(item.get('open', 0)),
+                        high=float(item.get('high', 0)),
+                        low=float(item.get('low', 0)),
+                        close=float(item.get('close', 0)),
+                        volume=int(item.get('volume', 0)),
+                        adjusted_close=float(item.get('adjusted_close')) if item.get('adjusted_close') else None
+                    )
+                    stock_data.append(stock_price)
+                return stock_data
+            else:
+                print(f"API request failed with status {response.status}")
+                return []
+    except Exception as e:
+        print(f"Error fetching stock data with urllib: {e}")
         return []
