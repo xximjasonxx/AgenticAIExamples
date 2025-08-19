@@ -1,6 +1,7 @@
 
-from typing import List
 import uuid
+from typing import List
+from llm import get_keywords
 
 def prepare_data(results: List[dict]) -> List[dict]:
     chunked_results = []
@@ -19,14 +20,20 @@ def prepare_data(results: List[dict]) -> List[dict]:
       # Chunk the transcript
       chunks = [transcript[i:i + 300] for i in range(0, len(transcript), 300)]
       for chunk in chunks:
+        # generate keywords
+        keywords = get_keywords(chunk)
+        print(keywords)
+
         chunked_results.append({
           "id": str(uuid.uuid5(uuid.NAMESPACE_DNS, doc_name)),
           "doc_name": doc_name,
           "date": date,
           "title": title,
           "president": president,
-          "chunk_text": chunk
+          "chunk_text": chunk,
+          "chunk_keywords": keywords
         })
     
     # Return the prepared data
     return chunked_results
+   
