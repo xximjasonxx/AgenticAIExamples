@@ -5,7 +5,7 @@ import json
 
 from .request_parser import parse_request_body
 from .date_service import DateService
-from .stock_service import StockService
+from .stock_history_service import StockHistoryService
 
 def register_get_price_history_function(app: func.FunctionApp):
     
@@ -32,7 +32,7 @@ def register_get_price_history_function(app: func.FunctionApp):
         
         # figure out the range minus 1 month
         start_date, end_date = DateService.get_period()
-        stock_service = StockService()
+        stock_service = StockHistoryService()
         price_data = stock_service.get_stock_history(
             ticker=request_data.tickerName.strip(),
             period_start=start_date,

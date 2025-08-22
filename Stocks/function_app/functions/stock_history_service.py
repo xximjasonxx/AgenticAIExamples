@@ -5,7 +5,7 @@ import os
 import urllib.request
 import json
 
-class StockService:
+class StockHistoryService:
   def __init__(self):
     pass
 
