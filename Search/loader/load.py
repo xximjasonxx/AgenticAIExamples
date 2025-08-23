@@ -6,7 +6,7 @@ from azure.core.credentials import AzureKeyCredential
 
 search_client = SearchClient(
     endpoint=os.environ["AZURE_SEARCH_ENDPOINT"],
-    index_name="sotu-trump-obama-v1",
+    index_name="sotu-trump-obama-v2",
     credential=AzureKeyCredential(os.environ["AZURE_SEARCH_ADMIN_KEY"])
 )
 

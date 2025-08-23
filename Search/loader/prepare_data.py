@@ -22,8 +22,6 @@ def prepare_data(results: List[dict]) -> List[dict]:
       for chunk in chunks:
         # generate keywords
         keywords = get_keywords(chunk)
-        print(keywords)
-
         chunked_results.append({
           "id": str(uuid.uuid5(uuid.NAMESPACE_DNS, doc_name)),
           "doc_name": doc_name,
