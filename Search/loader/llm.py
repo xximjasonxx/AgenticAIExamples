@@ -5,9 +5,9 @@ from typing import List
 from openai import AzureOpenAI
 
 client = AzureOpenAI(
-    api_version="2024-12-01-preview",
-      azure_endpoint=os.environ["AZURE_FOUNDRY_ENDPOINT"],
-    api_key=os.environ["AZURE_FOUNDRY_API_KEY"],
+  api_version="2024-12-01-preview",
+  azure_endpoint=os.environ["AZURE_FOUNDRY_ENDPOINT"],
+  api_key=os.environ["AZURE_FOUNDRY_API_KEY"],
 )
 
 def get_keywords(text: str) -> List[str]:
@@ -46,3 +46,16 @@ def get_keywords(text: str) -> List[str]:
             return []
     except Exception:
         return []
+
+def get_embedding(text: str) -> List[float]:
+  """Generate embedding for the given text using Azure OpenAI."""
+  try:
+    response = client.embeddings.create(
+      model="text-embedding-ada-002-deployment",
+      input=text
+    )
+    
+    return response.data[0].embedding
+  except Exception as e:
+    print(f"Error generating embedding for text: {text[:50]}...")
+    raise e

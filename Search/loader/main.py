@@ -12,7 +12,7 @@ print(len(results), "results found")
 
 # now we want to prepare the data for storage to Azure Search Index
 results = prepare_data(results)
-print(len(results), "prepared results found")
+print(len(results), "prepared results ready")
 
 # now add to the index
 load_index(results)

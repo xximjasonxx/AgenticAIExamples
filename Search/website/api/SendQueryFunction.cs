@@ -3,6 +3,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
+using api.Services;
 
 namespace api
 {
@@ -56,15 +57,13 @@ namespace api
 
                 string query = queryElement.GetString() ?? "";
 
-                // Create successful response
-                var response = req.CreateResponse(HttpStatusCode.OK);
-                response.Headers.Add("Content-Type", "application/json; charset=utf-8");
-                
-                var responseData = new { query = query };
-                await response.WriteStringAsync(JsonSerializer.Serialize(responseData));
+                // Call the injected SearchService to get the response
+                string result = string.Empty;  //await _searchService.GetResponse(query);
 
-                _logger.LogInformation($"Successfully processed query: {query}");
+                var response = req.CreateResponse(HttpStatusCode.OK);
+                await response.WriteStringAsync(result);
                 return response;
+                
             }
             catch (Exception ex)
             {
